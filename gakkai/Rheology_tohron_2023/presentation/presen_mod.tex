@@ -1,0 +1,1145 @@
+\documentclass[unicode,12pt,aspectratio=169]{beamer}
+
+\usepackage{luatexja}% 日本語したい
+\usepackage[haranoaji,no-math,deluxe,expert,nfssonly,match,scale=1.0]{luatexja-preset}
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+
+\usepackage{amssymb,amsmath,ascmac}
+
+\usepackage{multirow}
+\usepackage{lltjext}
+
+\usepackage{siunitx}
+
+\newcommand{\dv}[2][]{\dfrac{\mathrm{d} #1}{\mathrm{d} #2}}
+\newcommand{\pv}[2][]{\dfrac{\partial #1}{\partial #2}}
+\newcommand{\dd}[1]{\mathrm{d} #1}
+
+\usepackage{bm}
+
+\usepackage{animate}
+\usepackage{svg}
+\usepackage{xparse}
+%%%%%%%%%%%%%%%%%%%%%%%
+\graphicspath{{../../fig/},{../fig/}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{angles,quotes}
+\usetikzlibrary{math, calc}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing}
+%% define fancy arrow. \tikzfancyarrow[<option>]{<text>}. ex: \tikzfancyarrow[fill=red!5]{hoge}
+\tikzset{arrowstyle/.style n args={2}{inner ysep=0.1ex, inner xsep=0.5em, minimum height=2em, draw=#2, fill=black!20, font=\sffamily\bfseries, single arrow, single arrow head extend=0.4em, #1,}}
+\NewDocumentCommand{\tikzfancyarrow}{O{fill=black!20} O{none}  m}{
+\tikz[baseline=-0.5ex]\node [arrowstyle={#1}{#2}] {#3 \mathstrut};}
+\newcommand{\highlight}[2][yellow]{\tikz[baseline=(x.base)]{\node[rectangle,rounded corners,fill=#1!10](x){#2};}}
+\newcommand{\highlightcap}[3][yellow]{\tikz[baseline=(x.base)]{\node[rectangle,rounded corners,fill=#1!10](x){#2} node[below of=x, color=#1]{#3};}}
+
+%目次スライド
+% \AtBeginSection[]{
+%   \frame{\tableofcontents[currentsection]}
+% }
+%アペンディックスのページ番号除去
+\newcommand{\backupbegin}{
+\newcounter{framenumberappendix}
+\setcounter{framenumberappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+\addtocounter{framenumberappendix}{-\value{framenumber}}
+\addtocounter{framenumber}{\value{framenumberappendix}} 
+}
+
+%%%%%%%%%%%  theme  %%%%%%%%%%%
+% \usetheme{Copenhagen}
+\usetheme{metropolis}
+% \usetheme{CambridgeUS}
+% \usetheme{Berlin}
+
+%%%%%%%%%%%  inner theme  %%%%%%%%%%%
+% \useinnertheme{default}
+
+% %%%%%%%%%%%  outer theme  %%%%%%%%%%%
+\useoutertheme{default}
+% \useoutertheme{infolines}
+
+%%%%%%%%%%%  color theme  %%%%%%%%%%%
+%\usecolortheme{structure}
+
+%%%%%%%%%%%  font theme  %%%%%%%%%%%
+\usefonttheme{professionalfonts}
+%\usefonttheme{default}
+
+%%%%%%%%%%%  degree of transparency  %%%%%%%%%%%
+%\setbeamercovered{transparent=30}
+
+%%%%%%%%%%%  numbering  %%%%%%%%%%%
+% \setbeamertemplate{numbered}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \setbeamertemplate{items}[default]
+\setbeamertemplate{enumerate item}[default]
+
+% セクション名だけをTOCに出力
+\setcounter{tocdepth}{1}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title
+[Relaxation Behavior of Network Polymers with Random Connectivity]
+{Relaxation Behavior of Network Polymers\\ with Random Connectivity}
+\author[Toagosei H.Sasaki]{Hiroshi Sasaki}
+\institute[Toagosei Co., Ltd.]{Toagosei Co., Ltd.}
+\date{October 20, 2023}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[noframenumbering]\frametitle{}
+	\titlepage
+\end{frame}
+% %%%%%%%%%%%%%%%%%%%%%
+% \section*{}
+% %
+% \begin{frame}
+% %[allowframebreaks]
+% {Outline}
+% 	\tableofcontents
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+\subsection{Adhesive Bonding Technology as a Key to Multi-Materialization}
+\begin{frame}
+    \frametitle{Adhesive Bonding Technology}
+		\begin{columns}[T, onlytextwidth]
+			\column{.4\linewidth}
+					\centering
+						\includegraphics[width=\textwidth]{adhesive_car2.png}
+
+						\vspace{5mm}
+						\includegraphics[width=\textwidth]{adhesive_car.png}
+				
+			\column{.58\linewidth}
+			\begin{itemize}
+				\item For {Energy conservation}
+					\begin{itemize}
+						\item weight reduction of cars
+						\item \alert{multi-materialization}
+						\item \alert{adhesive bonding} technology is a key
+					\end{itemize}
+				\item durability in long-term use is important
+					\begin{itemize}
+						\item Especially for alert{fatigue tests}
+						\item \alert{reliability of polymer materials is still ambiguous}
+					\end{itemize}
+			\end{itemize}
+			
+		\end{columns}
+
+		% 発表ノート
+		\note{
+			背景から始めましょう。
+			\begin{itemize}
+				\item 地球温暖化への対策の一環として省エネルギーが注目され、
+				\item 車両の軽量化においては、
+				\item \alert{マルチマテリアル化が検討}され
+				\item \alert{ 接着接合が重要視}されています。
+			\end{itemize}
+			
+			\begin{itemize}
+				\item その際に、高分子材料の比強度が高いことはいいのですが、
+				\item 疲労破壊に対する耐久性が不明確なことが問題になっています。
+			\end{itemize}
+		}
+\end{frame}
+
+
+% \subsection{Durability of Rubber}
+\begin{frame}
+	\frametitle{Mechanical Hysteresis Loss and Fracture Energy}
+	\vspace{-1mm}
+		% \begin{block}{}
+			\begin{columns}[T, onlytextwidth]
+				\column{.7\linewidth}
+					\begin{itemize}
+						\item Mechanical Hysteresis Loss 
+							\begin{itemize}
+								\item Reduced stress on unloading
+								\item Energy dissipation during cycle
+								\item \alert{Positive correlation} with fracture energy\footnote{
+									\scriptsize{K.A.Grosch, J.A.C.Harwood, A.R.Payne, \\Rub. Chem. Tech., 41, 1157(1968)}
+								}
+							\end{itemize}
+						% \item \alert{Possitive correration} with fracture energy\footnote{
+						% 		\scriptsize{K.A.Grosch, J.A.C.Harwood, A.R.Payne, \\Rub. Chem. Tech., 41, 1157(1968)}
+						% 	}
+						% 	\begin{itemize}
+						% 		\item \alert{変形温度}にも強く依存
+						% 		\item SBRのガラス転移温度との距離？
+						% 	\end{itemize}
+						\item The origin of Hysteresis Loss\footnote{
+							\scriptsize{A.R.Payne, J.Poly.Sci.:Sympo., 48, 169(1974)}
+						}
+						\begin{itemize}
+							\item \alert{Viscoelastics}
+							\color{blue}
+							\item Crystallization
+							\item Derived by added filler
+						\end{itemize}
+					\end{itemize}
+				\column{.3\linewidth}
+				\begin{center}
+					\vspace{-2mm}
+					\includegraphics[width=\textwidth]{hysteresis_curve.png}
+
+					\vspace{5mm}
+					\includegraphics[width=\textwidth]{hyst_break2.png}
+				\end{center}
+			\end{columns}
+		\note{
+			\begin{itemize}
+				\item \alert{この図に書いた力学的なヒステリシス}は、この緑部分のエネルギー散逸であり、
+				\item \alert{破壊エネルギーと相関}することがペインらにより報告されています。
+				\item その由来としては、多数考えられますが、
+				\item 我々は、この粘弾性起因のものにフォーカスして検討しています。
+			\end{itemize}
+		}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Andrews Theory for Rubber Toughness}
+	% \vspace{-2mm}
+		\begin{exampleblock}{Andrews Theory}
+			\begin{columns}[T, onlytextwidth]
+				\column{.75\linewidth}
+				\begin{itemize}
+					\item Focused on \alert{stress field around the crack}\footnote{
+						\scriptsize
+			{E.H.Andrews, Y.Fukahori, J. of Mat. Sci. 12, 1307 (1977)}
+					}
+						\begin{itemize}
+							\item \textcolor{blue}{Stress Loading zone}
+							\item \textcolor{red}{Unloading one}
+							\item divided by stress maximum line
+						\end{itemize}
+					\item On the progress of the crack, 
+						\begin{itemize}
+							\item \textcolor{green}{stress field is transit}
+							\item Hysteresis Loss$\Rightarrow${Energy Dissipation}
+							\item The progress of Crack is \alert{Suppressed}
+						\end{itemize}
+					\item Bigger Hysteresis Loss results in  Higher Toughness.
+				\end{itemize}
+				\column{.25\linewidth}
+					\begin{center}
+						\includegraphics[width=.85\textwidth]{crack.png}
+					\end{center}
+			\end{columns}
+		\end{exampleblock}
+		% \vspace{-2mm}
+		% \begin{alertblock}{疲労破壊も考慮すると}
+		% 	\begin{itemize}
+		% 		\item \alert{可逆的}であることが望ましい。\textcolor{blue}{$\neq$ 犠牲結合}
+		% 		\item 変形の周期に対応できるように、\alert{回復速度}も重要。
+		% 		\item \alert{粘弾性挙動としてのヒステリシスロス$\Leftrightarrow$緩和挙動}
+		% 	\end{itemize}
+		% \end{alertblock}
+
+		\note{
+			\begin{itemize}
+				\item ゴム系材料の破壊において、
+				\item アンドリューは \alert{クラックチップの先端近傍の応力場に注目}して、
+				\item クラック進展に伴い、\alert{荷重場と除荷場が変遷し}、
+				\item その際に、\alert{ヒステリシスロスによるエネルギー散逸が存在}すれば、
+				\item \alert{クラック進展が抑制}されるという機構を提案しています。
+				\item したがって、クラック進展に伴う時間スケールでのヒステリシスロスの大小が、
+				\item 破壊耐久性に強い影響を持つということになります。
+			\end{itemize}
+		}
+\end{frame}
+
+\subsection{Theoretical Models for Rubber}
+\begin{frame}
+    \frametitle{Classical Theory of Rubber Elasticity}
+        % \vspace{-2mm}
+		% \begin{block}{Free Energy Density of Rubbers against Strain invariant}
+		% 	\vspace{-2mm}
+		% 	% 非圧縮性条件から第3不変量がおちて、
+		% 	\scriptsize
+		% 	\begin{align*}
+		% 		\dfrac{F}{V} = W 
+		% 		% &= \sum_{i,j = 0}^{\infty} C_{ij}(I_1-3)^i(I_2-3)^j \\[-2mm]
+		% 		&= C_0 + \underbrace{{\color{green}C_1(I_1-3)} + {\color{red}C_2(I_2-3)}}_{\color{red}Mooney-Rivlin Model} + \sum_{i,j = 1}^{\infty} C_{ij}(I_1-3)^i(I_2-3)^j
+		% 	\end{align*}  
+		% \end{block}
+		% \vspace{-5mm}
+		\begin{columns}[T, onlytextwidth]
+			\column{.48\linewidth}
+				\begin{exampleblock}{Neo-Hookean Model}
+					\vspace{-2mm}
+					% 第1不変量のみを対象
+						\scriptsize
+						\begin{align*}
+							&W = C_1 (I_1-3) \\
+							&\text{against Uniaxial elongation} \\
+							&\sigma_{nom} = 2 C_1\left(\lambda - \dfrac{1}{\lambda^2}\right) = G \left(\lambda - \dfrac{1}{\lambda^2}\right)
+						\end{align*}
+				\end{exampleblock}
+			\column{.48\linewidth}
+				\begin{alertblock}{Mooney-Rivlin Model}
+					\vspace{-2mm}
+					% 高次の項をおとす
+					\scriptsize
+					\begin{align*}
+						&W = C_1 (I_1-3) + C_2(I_2-3) \\
+						&\text{against Uniaxial elongation} \\
+						&\sigma_{nom} = 2 \left(C_1 + C_2\dfrac{1}{\lambda} \right) \left(\lambda - \dfrac{1}{\lambda^2}\right)
+					\end{align*}
+				\end{alertblock}
+		\end{columns}
+		% \vspace{-1mm}
+		\begin{block}{With or without Junction Poinits fluctuation}
+			\vspace{1mm}
+			\begin{columns}[T, onlytextwidth]
+				\column{.48\linewidth}
+				\small
+				\color{blue}{Affine Network Model
+				\footnote{
+					\tiny{P.J. Flory, Principles of Polymer Chemistry, (1953)}
+				}
+				}
+				\vspace{-2mm}
+				\scriptsize
+				\begin{align*}
+					% &\text{Affine Network Model}\\
+					&G_{affine} = \nu k_B T  \\
+					&\text{$\nu$: Number density of strands in the system}
+				\end{align*}
+				\column{.48\linewidth}
+				\small
+				\color{magenta}{Phantom Network Model
+				\footnote{
+					\tiny{H.M. James, E.J. Guth, Chem. Phys., 21, 6, 1039 (1953)}
+				}
+				}
+				\vspace{-2mm}
+				\scriptsize
+				\begin{align*}
+					% &\text{Phantom Network Model}\\
+					&G_{phantom} = \nu k_B T \left(1 - \dfrac{2}{f}\right) \\
+					&\text{$f$: Functionality of Junction Points}
+				\end{align*}
+				\normalsize
+			\end{columns}
+		\end{block}
+
+		\note{
+			さて、少し話題を変えて、ゴム弾性についての古典的な取り扱いを振り返ってみます。
+			\begin{itemize}
+				\item 最も単純化した取り扱いとして、結節点がマクロな変形と相似となる Affine Network model が提案された後、
+				\item 結節点のゆらぎを考慮した Phantom Network Model が提案されています。
+				\item この際、結節点の分岐度に応じて、弾性率が低減します。
+			\end{itemize}
+		}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Constraint Factors for Junction Points and Strands}
+		\vspace{-2mm}
+		\begin{alertblock}{Vicinity of Junction Point}
+			\begin{columns}[totalwidth=1\textwidth]
+				\column{.75\textwidth}
+				\vspace{-3mm}
+				\begin{itemize}
+					\item Junction points are surrounded by many of \alert{adjacent strands(x in fig.).}
+					\item Fluctuation of junctions are \alert{suppressed}. 
+				\end{itemize}
+				\column{.22\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{JP_vicinity.png}
+			\end{columns}
+		\end{alertblock}
+		\vspace{-1mm}
+		\begin{block}{Effect of other strands (Combination of $G_c$ and $G_e$)}
+			\only<1>{
+				\begin{itemize}
+					\item Suppress the fluctuation of Junction Point
+					\begin{itemize}
+						\item Deviate from Phantom Network Model and higher $G_c$
+					\end{itemize}
+					\item Strands Entangles each other
+					\begin{itemize}
+						\item Works as a Junction Point
+						\item Generate additional $G_e$
+					\end{itemize}
+				\end{itemize}
+				Storage modulus $G$ is \alert{combination of $G_c$ and $G_e$}
+			}
+			\only<2>{
+				\begin{columns}[totalwidth=1\textwidth]
+					\column{.65\textwidth}
+					\begin{itemize}
+						\item Constrained Junction Model
+						\begin{itemize}
+							\item  $G$ approaches to $G_c$.\footnote{\tiny{P.J.Flory, J.Chem.Phys., 66, 12, 5720 (1977)}}
+						\end{itemize}
+						\item Topological relationships
+						\begin{itemize}
+							\item Contribution of entanglement.\footnote{\tiny{D.S.Pearson and W.Graessley, Macromol., 11, 3, 528 (1978)}}
+							\vspace{-2mm}
+							\scriptsize
+							\begin{align*}
+								G_e = T_e G_N^0
+							\end{align*}
+						\end{itemize}
+					\end{itemize}
+					\column{.25\textwidth}
+					\vspace{-2mm}
+					\includegraphics[width=\textwidth]{Constrained_Juntion.pdf}
+	
+					\vspace{3mm}
+					\includegraphics[width=\textwidth]{topological_effect_ring.png}
+				\end{columns}
+			}
+
+			\note{
+				\begin{itemize}
+					\item 結節点の近傍では、
+					\begin{itemize}
+						\item Junction points は \alert{近接するストランド} に囲まれ、
+						\item ゆらぎは \alert{抑制されます}. 
+					\end{itemize}
+					\item その効果は２つあり、
+					\begin{itemize}
+						\item ゆらぎを抑制し、Affineモデルへと近づき、
+						\item 他の効果としては、空間的にトラップされた絡み合いが付加的な弾性率 $G_e$ を生じます。
+						\item その結果として、弾性率は \alert{combination of $G_c$ and $G_e$}
+					\end{itemize}
+					\item \textcolor{red}{(CLICK)}
+					\item この問題に対して、２つのアプローチがあり、
+					\begin{itemize}
+						\item その一つは Constrained Junction model, 
+						\item on the uniaxial deformation, constraints are released and $G$ approaches to $G_c$
+						\item もう一つが、トラップ土エンタングルメントの検討です。
+					\end{itemize}
+				\end{itemize}
+			}
+		\end{block}
+
+			
+\end{frame}
+
+\setcounter{footnote}{0}
+\begin{frame}
+	\frametitle{Recent approach for Constraints (Entanglements)}
+	\vspace{-2mm}
+		\begin{itemize}
+			\item Diffused-Constraint Model
+			\begin{itemize}
+				\item Confining potential affect all points along the chain.\footnote{\tiny{A. Kloczkowski, J.E. Mark, B. Erman, Macromol., 28, 5089 (1995)}}
+			\end{itemize}
+			\item Nonaffine Tube Model
+			\begin{itemize}
+				\item Improved model of "Edwards' Tube Model".\footnote{\tiny{M. Rubinstein, S. Panyukov, Macromol., 30, 25, 8036 (1997)}}
+			\end{itemize}
+			\item \alert<2>{Slip-tube Model}
+			\begin{itemize}
+				\item A pairwise interaction of chains is introduced.\footnote{\tiny{M. Rubinstein, S. Panyukov, Macromol., 35, 6670 (2002)}}
+			\end{itemize}
+		\end{itemize}
+
+		\vspace{1mm}
+		\centering
+		\visible<2>{
+			\includegraphics[width=.9\textwidth]{rubinstein_4.png}
+		}
+		\note{
+			\begin{itemize}
+				\item 近代的な検討はこの３つであり、
+				\item どれも、Phantom Network Model をベースにしたものです。
+				\item Rubinstein's の Slip-tube model は、
+				\item \textcolor{red}{(Point and CLICK)}
+				\item 比較的単純に Gc と Ge を分割しており、
+				\item その影響が変形とともに減少する過程を記述します。
+			\end{itemize}
+		}
+\end{frame}
+
+\subsection{Objectives}
+\setcounter{footnote}{0}
+\begin{frame}
+	\frametitle{Random Networks as a key for PNM}
+		\begin{columns}[c, onlytextwidth]
+			\column{.72\linewidth}
+			\begin{itemize}
+				\item Introduction of \alert{Random Connectivity}.
+					\item \alert{Criteria for PNM} is fulfilled\footnote{
+								\scriptsize{P. J. Flory, Proc. R. Soc. London. A, 351, 351 (1976)}
+						}.
+					\begin{itemize}
+						\item the mean values $\bar{\bm{r}}$ of strands are \alert{fluctuate}
+						\item fluctuations $\Delta \bm{r} = \bm{r} - \bar{\bm{r}}$ are \alert{Gaussian}
+						\item the mean-square fluctuations \alert{depend only on structure}
+					\end{itemize}
+					% \end{itemize}
+				\item Previous Work for Random Network
+				\begin{itemize}
+					\item \alert{Random endcrosslink for telechelics}\footnote{
+						\scriptsize{G.S. Grest, et.al., Non-Cryst. Solids, 274, 139 (2000)}
+						}
+					\item \alert{Primitive Chain Network Simulation}\footnote{
+						\scriptsize{Y. Masubuchi, Nihon Reoroji Gakkaishi, 49, 2, 73 (2021)}
+					}
+				\end{itemize}
+			\end{itemize}
+			\column{.26\linewidth}
+				\centering
+					\includegraphics[width=\textwidth]{random_NW.png}
+		\end{columns}
+
+		\note{
+			\begin{itemize}
+				\item ランダムな接続性が Phantom Network model のキーとなることが知られており、
+				\item \textcolor{red}{(POINT)}
+				\item ここに示したような、クライテリアを充足するようです。
+				\item \textcolor{red}{(POINT)}
+				\item この２つの先行研究がシミュレーションとして知られていますが、
+			\end{itemize}
+		}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Objectives}
+
+	\begin{itemize}
+		\item Recent approach for rubber elasticity models are based on Phantom Network Model.
+		\item Introducing random connectivity, MD simulation studies were carried out.
+		\item To investigate the criteria for Phantom Network Model, Two model chains are used.
+		\begin{enumerate}
+			\item Employing phantom chain, basics for PNM is examined.
+			\item Changing the chain to KG Chain, constraints effects are investigated.
+			\begin{itemize}
+				\item Excluded Volume Effect
+				\item No mutual crossing of Strands
+			\end{itemize}
+		\end{enumerate}
+	\end{itemize}
+
+	\note{
+		本検討のオブジェクトについて説明します。
+		\begin{itemize}
+			\item ゴム弾性に対する現代的なアプローチは、\alert{Phantom Network Model}をベースにしたものとなっています。
+			\item そこで、我々は、
+			\item ランダムな接続性を導入したネットワークモデルのMDシミュレーションでのPhantom Network Modelの検討を行ってきました。
+			\item 本日は、以下の二点についてまとめた結果をお話します。
+			\begin{enumerate}
+				\item ストランドとして、す抜け鎖であるファントム鎖を用いてPhantom Network Modelとの整合性を確認
+				\item ストランドを \alert{KG Chain}に変更して、その差異を検討
+				\begin{itemize}
+					\item KG Chainは
+					\item 排除体積効果があり、
+					\item ストランドの相互すり抜けが抑制
+				\end{itemize}
+			\end{enumerate}
+		\end{itemize}
+	}
+\end{frame}
+
+% \section{Simulation}
+% \subsection{Generation Recipe of Random Networks}
+
+% \begin{frame}
+% 	\frametitle{Generation of Initial Structure of Random Networks}
+% 	\begin{enumerate}
+% 		\item 8-Chain Model is used as starting structure in \alert{Real space}.
+% 			\begin{itemize}
+% 				\item Randomly selected edge is removed until desired functionality.
+% 				\item Topological model is generated. 
+% 			\end{itemize}
+% 		\item Randomness is introduced in \alert{topological space}.
+% 			\begin{itemize}
+% 				\item By \alert{edge exchange}, random connectivity is introduced for each node.
+% 			\end{itemize}	
+% 		\item Corresponding real space structure is generated.
+% 		\item According to e2e distance of strand, system size and multiplicity are set.
+% 	\end{enumerate}
+
+% 	\vspace{-1mm}
+% 	\begin{columns}[T, onlytextwidth]
+% 		\column{.33\linewidth}
+% 			\includegraphics[width=\textwidth]{8_per.png}
+% 		\column{.33\linewidth}
+% 			\vspace{-5mm}
+% 			\begin{center}
+% 				\includegraphics[width=.6\textwidth]{Network.png}
+% 			\end{center}
+% 		\column{.33\linewidth}
+% 			\includegraphics[width=\textwidth]{bond_exchg.png}
+% 	\end{columns}
+	
+% 	\note{
+% 		ランダムなネットワークの初期構造の作成を簡単に説明します。
+% 		\begin{itemize}
+% 			\item 最初に実空間で 8-Chain Model を用います。
+% 				\begin{itemize}
+% 					\item ランダムに選択されたストランドを所望の分岐度になるまで消去し、
+% 					\item この真ん中に示した位相空間でのトポロジカルモデルとします。 
+% 				\end{itemize}
+% 			\item \alert{位相空間において}、ネットワークの接続性を確認しながら、 \alert{ストランド交換を繰り返す。}	
+% 			\item 十分に交換を行った後に、実空間でのモデルへと戻します。
+% 			\item ストランドの末端間距離に対応した長さとなるようにシステムサイズを決め、
+% 			セグメント密度が $\rho = 0.85$ となるように多重度も決めます。
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+% \subsection{Phantom and KG Chains as Strands}
+% \begin{frame}
+% 	\frametitle{Phantom and KG Chains as Strands}
+% 	\begin{itemize}
+% 		\item Phantom Chain:
+% 		\begin{itemize}
+% 			\item No Excluded Volume is set (no segmental interaction).
+% 			\item "Force Cap LJ" is set as Angle Potential to enumerate e2e length of KG Chains.
+% 			\item Harmonic bond（k=1000）
+% 		\end{itemize}
+% 		\item KG Chain:
+% 		\begin{itemize}
+% 			\item Excluded Volume is set by Repulsive LJ Potential.
+% 			\item Bond Potential is set to FENE.
+% 			\item Because of above two potentials, No Chain crossing will occur.
+% 		\end{itemize}
+% 	\end{itemize}
+
+% 	\note{
+% 		\begin{itemize}
+% 			\item Phantom and KG Chains の条件をまとめました。
+% 			\item 今回のシミュレーションで重要なポイントは、
+% 			\item ファントム鎖において、
+% 			\item "Force Cap LJ" という仕組みでストランドのセグメント間に 1,3 相互作用を導入して、
+% 			\item セグメント間のアングルがKG鎖と同等となるように設定し、末端間距離も整合するようにしたことです。
+% 			\item KG鎖においては、通常の斥力系の条件を用いています。
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+
+% \subsection{Simulation Conditions}
+% \begin{frame}
+%     \frametitle{Reluxation of Initial Structure in KG Network}
+%         \vspace{-2mm}
+% 		\begin{block}{KG Network: KG chain as strand}
+% 			\begin{itemize}
+% 				\item \alert{Relaxation of initial structure} is important.
+% 					\fontsize{6pt}{0pt}
+% 					\begin{align*}
+% 						&U_{KG}(r) = 
+% 						\begin{cases}
+% 						U_{nonbond} = U_{LJ} \;\text{where } r_c = 2^{(1/6)}\sigma \\
+% 						U_{bond} = U_{LJ} + U_{FENE}
+% 						\end{cases} 
+% 					\end{align*}
+% 			\end{itemize}
+% 		\end{block}
+% 		\vspace{-3mm}
+% 		\begin{columns}[T, onlytextwidth]
+% 			\column{.66\linewidth}
+% 				\begin{exampleblock}{Initial Structure Relaxation}
+% 					\begin{itemize}
+% 						\item According method of Auhl\footnote{
+% 							\scriptsize{R. Auhl et al. J. of Chem. Phys., 119, 12718 (2003)}
+% 						}
+% 						\begin{itemize}
+% 							\item Using force-capped-LJ pot.
+% 							\item relaxed by Slow Push Off
+% 						\end{itemize}
+% 					\end{itemize}
+% 					\fontsize{6pt}{0pt}
+% 					\begin{align*}
+% 						&U_{FCLJ}(r) = 
+% 						\begin{cases}
+% 						(r-r_{fc})*U_{LJ}^{\prime}(r_{fc}) + U_{LJ}(r_{fc}) \; &r< r_{fc} \\
+% 						U_{LJ}   \;\;\;\;\;\;\; &r \geq r_{fc}
+% 						\end{cases} 
+% 					\end{align*}
+% 				\end{exampleblock}
+% 			\column{.32\linewidth}
+% 				\vspace{2mm}
+% 				\begin{center}
+% 					\includegraphics[width=1.2\textwidth]{Ev_fcLJ.png}
+% 				\end{center}
+% 				\vspace{-3mm}
+% 				\scriptsize
+% 				\begin{itemize}
+% 					\item force-capped-LJ Pot.
+% 					\item gradually entangled
+% 				\end{itemize}
+% 		\end{columns}
+
+% 		\note{
+% 			\begin{itemize}
+% 				\item 相互の鎖のすり抜けの生じないKG鎖では、初期構造の生成が重要です。
+% 				\item ここに示した force-capped-LJ pot.により、
+% 				\item 少しずつ鎖のすり抜け度合いを強めて適切な初期構造を。
+% 			\end{itemize}
+% 		}
+% \end{frame}
+
+% \section{Results}
+% \subsection{Networks with Phantom Chains}
+% \begin{frame}
+% 	\frametitle{
+% 		Phantom Chain NW (f=4, N=36)
+% 	}
+% 	\begin{itemize}
+% 		\item Strand-length is set to Equilibrated length (N=36)
+% 		\item Multiplicity is 3 to keep $\rho = 0.85$
+% 	\end{itemize}
+
+% 	\vspace{3mm}
+% 	\begin{columns}[c, onlytextwidth]
+% 		\column{.4\linewidth}
+% 		\centering
+% 		\includegraphics[width=.65\textwidth]{N36_f4.png}
+% 		\column{.55\linewidth}
+% 		\centering
+% 		\includegraphics[width=.8\textwidth]{contour.png}
+% 	\end{columns}
+% 	\note{
+% 		\begin{itemize}
+% 			\item N=36が先ほど示した条件でストランドが自然長になる条件なんですが、
+% 			\item 鎖に沿ったセグメント間距離を見ると随分伸長されていて、
+% 			\item ズリせん断印加時の応力もPNMよりも高くなっていた。
+% 			\item ストランドのセグメント数を増加し、かつ、系を収縮することで
+% 			\item 応力がPNMの予想するものと一致した。
+% 			\item \textcolor{red}{(POINT N=48)}
+% 			\item このことから、ストランド長が適切でなければ結節点のゆらぎを抑制し、その結果PNMから乖離していくと推定できた。
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+
+% \begin{frame}
+% 	\frametitle{
+% 		Strand length Effect for Phantom Chain NW
+% 	}
+% 	\begin{itemize}
+% 		\item Strand-length is varied from 36 to 48 for f=4
+% 		\item System size is \alert{reduced to keep $\rho = 0.85$}
+% 	\end{itemize}
+
+% 	\begin{figure}[htb]
+% 		\centering
+% 			\includegraphics[width=.8\textwidth]{N36_N40_N48.png}
+
+% 			\scriptsize{Strand Length Comparison for Shear Stress}
+% 	\end{figure}
+
+% 	\note{
+% 		\begin{itemize}
+% 			\item N=36が先ほど示した条件でストランドが自然長になる条件なんですが、
+% 			\item 鎖に沿ったセグメント間距離を見ると随分伸長されていて、
+% 			\item ズリせん断印加時の応力もPNMよりも高くなっていた。
+% 			\item ストランドのセグメント数を増加し、かつ、系を収縮することで
+% 			\item 応力がPNMの予想するものと一致した。
+% 			\item \textcolor{red}{(POINT N=48)}
+% 			\item このことから、ストランド長が適切でなければ結節点のゆらぎを抑制し、その結果PNMから乖離していくと推定できた。
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+% \begin{frame}
+% 	\frametitle{
+% 		Comparison of Functionality (f = 3, 4, 6)
+% 	}
+
+% 	\begin{block}{For Varied Functionalities}
+% 		\begin{itemize}
+% 			\item With proper strand length
+% 			\item Modulus changed according to theory
+% 		\end{itemize}
+
+% 		\vspace{5mm}
+% 		\centering
+% 			\includegraphics[width=\textwidth]{compare_346.png}
+% 	\end{block}
+
+% 	\note{
+% 		\begin{itemize}
+% 			\item 適正なストランド帳である N=48 では、
+% 			\item 分岐数の影響もきれいにPNMに合致していた。
+% 			\item \textcolor{red}{(POINT all)}
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+% \subsection{KG Chain Networks}
+% \begin{frame}
+% 	\frametitle{Mechanical Responce for KG Chains(f=4, N=48)}
+% 	\vspace{-3mm}
+% 	\begin{alertblock}{4-Chain Random Network with KG Chain}
+% 		\begin{itemize}
+% 			\item Excluded Volume Effect by non-bonding LJ Potential.
+% 			\item No strands mutual crossing by FENE bond.
+% 		\end{itemize}
+% 	\end{alertblock}
+% 	\vspace{-4mm}
+% 	\begin{columns}[T, onlytextwidth]
+% 		\column{.48\linewidth}
+% 			\begin{block}{Phantom Chain}
+% 				\includegraphics[width=\textwidth]{4chain_N50_PNM_shear.png}
+% 			\end{block}
+			
+% 		\column{.48\linewidth}
+% 			\begin{block}{KG Chain}
+% 				\includegraphics[width=\textwidth]{4chain_N50_shear.png}
+% 			\end{block}
+% 	\end{columns}
+
+% 	\note{
+% 		\begin{itemize}
+% 			\item ファントムネットワークの結果に基づいて、同一のストランド長でKG鎖の検討を行いました。
+% 			\item その結果、モデュラスは高くなることが確認できました。
+% 			\item \textcolor{red}{(POINT)}
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+% % \begin{frame}
+% %     \frametitle{Analysis of Entanglements in Network: Z1-code}
+% %         \vspace{-2mm}
+% %         \begin{columns}[onlytextwidth][c]
+% %             \column{.3\linewidth}
+% %                 \includegraphics[width=\textwidth]{z_cord_4Chain.png}
+% % 				% \caption{Entanglements by Z-1 Code}
+				
+% %             \column{.6\linewidth}
+% %             \begin{block}{Comparison with Homopolymer Melt}
+% %                 \begin{itemize}
+% %                     \item Z is number of entanglements per chain
+% %                     % \item 今回のネットワークは、\\ホモポリマーと同等
+% %                 \end{itemize}
+% %                 \scriptsize
+% %                 \begin{center}
+% %                     \begin{tabular}{c||c|c} \hline
+% %                         &Homo & 4 Chain NW \\ \hline \hline
+% %                         Segments& 50& 48 \\ \hline
+% %                         Chains & 200& 768 \\ \hline
+% %                         Entanglements& 204& 800\\ \hline
+% %                         Entangled Chains&134&557 \\ \hline
+% %                         \alert{$<Z>_{Z1}$}&\alert{1.02}& \alert{1.04}\\ \hline
+% %                     \end{tabular}
+% %                 \end{center}
+% %             \end{block}
+% %         \end{columns}
+% %     \begin{alertblock}{Z1-code?}
+% %         \begin{itemize}
+% %             \item Z1-code is an algorism to visualize and count entanglements\footnote{
+% %                 M. Kröger, Comput. Phys. Commun. 168, 209 (2005)
+% %             }
+% %         \end{itemize}
+% %     \end{alertblock}
+% % 	\note{
+% % 		\begin{itemize}
+% % 			\item この弾性率増加の原因を明確にするため、絡み合いを表すZを見てみました。
+% % 			\item Zは同じ長さのストランドの直鎖ポリマーとほぼ同一であり適正な初期化も確認できました。
+% % 			\item \textcolor{red}{(POINT left two)}
+% % 			\item 1.02 and 1.04
+% % 		\end{itemize}
+% % 	}
+% % \end{frame}
+
+% \begin{frame}
+%     \frametitle{Reduced Entanglements by NPT Model}
+%         % \vspace{-3mm}
+% 		\begin{columns}[c, onlytextwidth]
+%             \column{.4\linewidth}
+%                 \footnotesize
+% 				\begin{itemize}
+% 					\item 4-Chain-\alert{NPT}\\
+% 					$<Z>_{Z1}$ = 0.36
+
+% 					\includegraphics[width=.62\textwidth]{z_cord_NPT_4Chain.png}
+% 					\item 4-Chain-NVT\\
+% 					$<Z>_{Z1}$ = 1,04
+
+% 					\includegraphics[width=.62\textwidth]{z_cord_4Chain.png}
+% 				\end{itemize}
+% 			\column{.55\linewidth}
+% 			\begin{block}{$G(t)$}
+% 				\begin{itemize}
+% 					\item Step Deformation（$\lambda=2.0$）
+% 					\item Reduced Modulus
+% 					% \item<2> \textcolor{blue}{定数を足せばKGと類似}
+% 				\end{itemize}
+% 					\includegraphics[width=\textwidth]{gt_4chain_comp.png}
+% 					% \includegraphics<2>[width=\textwidth]{gt_NPT_mod.png}
+% 				\end{block}
+% 		\end{columns}
+% 		\note{
+% 		\begin{itemize}
+% 			\item 比較のために、NPT条件を利用して、絡み合いの少ない初期状態を作成しました。
+% 			\item calculated $<Z>_{Z1}$ = 0.36
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+% \begin{frame}
+% 	\frametitle{
+% 		Entanglement effect in Slip-tube Model
+% 	}
+% 	\vspace{-1mm}
+% 	\begin{alertblock}{Entanglement in Slip-tube Model}
+% 		% \begin{columns}[onlytextwidth]
+% 		% 	\column{.8\linewidth}
+% 			\footnotesize
+% 			Theoretical model by Rubinstein\footnote{
+% 				\scriptsize{M. Rubinstein, S. Panyukov, Macromolecules, 35, 6670 (2002)}
+% 				}
+% 			\vspace{-3mm}
+% 			\scriptsize
+% 			\begin{align*}
+% 				G_c = \nu k_B T \left(1-\dfrac{2}{\phi} \right), \quad G_e = \dfrac{4}{7} \nu k_B T L \\
+% 				% &\text{where $\nu$ is the number density of network chains,} \\
+% 				\text{and L is the number of slip-links per network chain}
+% 			\end{align*}
+% 	\end{alertblock}
+% 	\vspace{2mm}
+% 	\centering
+% 			\includegraphics[width=.9\textwidth]{Entanglement_Comp.png}
+% 	\scriptsize
+% 	\note{
+% 		\begin{itemize}
+% 			\item Slip-tube model による見積もりとこれら二つとの比較はよい一致を示しました。
+% 			\item \textcolor{red}{(POINT left two)}
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+% \subsection{Relaxation in KG Networks}
+% \begin{frame}
+% 	\frametitle{
+% 		G(t) for Step Shear and Dynamic Rheo-Spectrum
+% 	}
+% 	\vspace{-2mm}
+% 	\begin{columns}[c, onlytextwidth]
+% 		\column{.48\linewidth}
+% 			\begin{block}{G(t) for Step Stretch}
+% 				\centering
+% 					\includegraphics[width=\textwidth]{gt_4chain_N50_stepstretch.png}
+% 			\end{block}
+% 		\column{.48\linewidth}
+% 			\begin{exampleblock}{Dynamic Viscoelastics}
+% 				\centering
+% 					\includegraphics[width=\textwidth]{gw_4chain_N50_stepstretch.png}
+% 			\end{exampleblock}
+% 	\end{columns}
+
+% 	\begin{block}{Conditions}
+% 		\begin{itemize}
+% 			\item 4-Chain KG-NW(N=50)
+% 			\item Step Stretch: $\lambda = 2$
+% 			\item G(t) is transformed to Dynamic Viscoelastic Spectrum 
+% 		\end{itemize}
+% 	\end{block}
+
+% 	\note{
+% 		\begin{itemize}
+% 			\item この緩和
+% 			\item G(t) and $\tan \delta$ decayed on a time scale of this region
+% 			\item \textcolor{red}{(POINT)}
+% 			\item it was longer than the longest relaxation time of homo-polymers of comparable length.
+% 			\item This prolonged relaxation time can be attributed to the reduced mobility of the cross-linking points due to the network structure
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+% \begin{frame}
+% 	\frametitle{Mechanical Hysteresis Loss}
+% 	\vspace{-2mm}
+% 	\begin{columns}[c, onlytextwidth]
+% 		\column{.48\linewidth}
+% 			\begin{exampleblock}{Dynamic Viscoelastics}
+% 				\centering
+% 					\includegraphics[width=\textwidth]{gw_4chain_N50_stepstretch.png}
+% 			\end{exampleblock}
+% 			\column{.48\linewidth}
+% 			\begin{alertblock}{Hysteresis by Cyclic Shear}
+% 				\centering
+% 					\includegraphics[width=\textwidth]{CyclicDeform_4chain_N50_rate5e-5.png}
+% 			\end{alertblock}
+% 	\end{columns}
+
+% 	\begin{block}{Conditions}
+% 		\begin{itemize}
+% 			\item 4-Chain KG-NW(N=50)
+% 			\item Cyclic Shear: $\gamma = 1$, $\dot{\gamma} = 5e^{-5}$
+% 		\end{itemize}
+% 	\end{block}
+
+% 	\note{
+% 		\begin{itemize}
+% 			\item Around this region
+% 			\item \textcolor{red}{(POINT)} 10-5
+% 			\item Hysteresis loss was checked using deformation rate of $\dot{\gamma} = 5e^{-5}$
+% 			\item rather high hysteresis loss was found 0.36
+% 			\item this result should concern with the longer relaxation time 
+% 			\item Network connectivity should affect the nature of hysteresis loss.
+% 		\end{itemize}
+% 	}
+% \end{frame}
+
+
+% % \begin{frame}
+% % 	\frametitle{4-Cain NW のせん断変形時のヒステリシス}
+% % 	\begin{itemize}
+% % 		% \item 変形速度の低減により、$\gamma<1$ 程度の小さなひずみでは Phantom Network Model:PNM に漸近
+% % 		\item PNM へと漸近する変形速度 ($\dot{\gamma} = 2e^{-4}$) で複数回の連続した変形に対しても迅速な回復を伴った力学的ヒステリシス (Hysteresis loss $\simeq$ 0.34) を示した。
+% % 	\end{itemize}
+
+% % 	\begin{columns}[totalwidth=\linewidth]
+% % 		\column{.5\textwidth}
+% % 			\centering
+% % 				\includegraphics[width=\textwidth]{Shear_Random_4chain_N20.png}
+% % 				Stress-Strain Curves for 4-chain NW 
+% % 		\column{.5\textwidth}
+% % 			\centering
+% % 				\includegraphics[width=\textwidth]{CyclicDeform_4chain_rate_2e-4.png}
+% % 				Hysteresis Response with Cyclic Deformations
+% % 		\end{columns}
+% % \end{frame}
+
+
+% % \begin{frame}
+% % 	\frametitle{各種の変形条件での力学的ヒステリシス}
+% % 		\centering
+% % 			\includegraphics[width=\textwidth]{hyst_shear_all.png}
+% % 			Hysteresis losses for valid shear rate and maximum deformation
+% % \end{frame}
+
+% % \begin{frame}
+% % 	\frametitle{ヒステリシスロス}
+% % 	\begin{itemize}
+% % 		\item 変形速度の低下に伴いヒステリシスロスは減少
+% % 		\item \textcolor{red}{$\dot{\gamma} \sim 1e^{-5}$ 程度のオーダーの時間スケールで消失}
+% % 	\end{itemize}
+% % 			\centering
+% % 				\includegraphics[width=.6\textwidth]{hyst_shear.png}\\
+% % 					Comparison of Hysteresis losses for 4-Chain NW
+% % \end{frame}
+
+% \begin{frame}
+% 	\frametitle{ストランドの最長緩和時間}
+% 	\begin{exampleblock}{最長緩和時間 ($\tau$) を評価}
+% 		\begin{columns}[totalwidth=\linewidth]
+% 			\column{.65\textwidth}
+% 			\begin{itemize}
+% 				\item ストランドのラウスモード（p=1）の自己相関関数 $C_p(t)$
+% 				\small
+% 				\begin{align*}
+% 					C_p(t) = \langle X_p(t)X_p(0) \rangle/\langle X_p^2 \rangle
+% 				\end{align*}
+% 				\normalsize
+% 				\item 相関関数の振る舞い
+% 				\begin{itemize}
+% 					\item 長時間極限で一定値に収束
+% 					\item 空間的な拘束のため
+% 					\item $C_p(\infty)$ を差し引いて評価
+% 					\small
+% 					\begin{align*}
+% 						\textcolor{red}{\tau \simeq 6.5e^{4}}
+% 					\end{align*}
+% 					\normalsize
+% 				\end{itemize}
+% 			\end{itemize}
+% 			\column{.33\textwidth}
+% 				\centering
+% 					\includegraphics[width=\textwidth]{Xp_1_org.png}\\
+% 					\scriptsize{$C_{p1}(t)$ for equilibrated structure}
+% 		\end{columns}
+% 	\vspace*{2mm}
+% 		\alert{ヒステリシスロスが消失する変形速度 ($\sim 1e^{-5}$) と対応}
+% 	\end{exampleblock}
+		
+% \end{frame}
+
+% \begin{frame}
+% 	\frametitle{Effect of Strand Length for Shorter KG Chain}
+% 	\begin{itemize}
+% 		\item For Phantom Chain
+% 		\begin{itemize}
+% 			\item Longer Strand resulted in lower Modulus
+% 		\end{itemize}
+		
+% 		\item KG Chain 
+% 		\begin{itemize}
+% 			\item Proper Length was found for Low Modulus
+% 			\item which implies proper restriction for JP
+% 		\end{itemize}
+		
+% 	\end{itemize}
+% 	% \begin{exampleblock}{最長緩和時間 ($\tau$) を評価}
+% 		\begin{columns}[totalwidth=\linewidth]
+% 			\column{.48\textwidth}
+% 			\centering
+% 					\includegraphics[width=\textwidth]{n_mod.png}\\
+% 					\scriptsize{Strand Length vs. Modulei ratio}
+% 			\column{.48\textwidth}
+% 				\centering
+% 					\includegraphics[width=\textwidth]{shear_n16.png}\\
+% 					\scriptsize{Shear Stress for N=16}
+% 		\end{columns}
+% 	% \vspace*{2mm}
+% 	% 	\alert{ヒステリシスロスが消失する変形速度 ($\sim 1e^{-5}$) と対応}
+% 	% \end{exampleblock}
+		
+% \end{frame}
+
+
+% \begin{frame}
+% 	\frametitle{Conclutions}
+
+% 	\begin{itemize}
+% 		\item Introducing random connectivity, MD simulation studies were carried out.
+% 		\item To investigate the criteria for Phantom Network Model, Two model chains are used.
+% 		\begin{itemize}
+% 			\item Employing phantom chain, basics for PNM is examined.
+% 			\begin{itemize}
+% 				\item Proper strand length is the key for PNM.
+% 				\item Functionality effect was confirmed.
+% 			\end{itemize}
+% 			\item Changing the chain to KG Chain, constraints effects are investigated.
+% 			\begin{itemize}
+% 				\item Trapped Entanglement was explained by Slip-tube Model
+% 				\item Hysteresis 
+% 			\end{itemize}
+% 		\end{itemize}
+% 	\end{itemize}
+
+% 	\note{
+% 		\begin{itemize}
+% 			\item Introducing random connectivity, MD simulation studies were carried out.
+% 			\item To investigate the criteria for Phantom Network Model, Two model chains are used.
+% 			\begin{itemize}
+% 				\item Employing phantom chain, basics for PNM is examined.
+% 				\begin{itemize}
+% 					\item Proper strand length is the key for PNM.
+% 					\item Functionality effect was confirmed.
+% 				\end{itemize}
+% 				\item Changing the chain to KG Chain, constraints effects are investigated.
+% 				\begin{itemize}
+% 					\item Trapped Entanglement was explained by Slip-tube Model
+% 					\item Hysteresis 
+% 				\end{itemize}
+% 			\end{itemize}
+% 		\end{itemize}
+% 	}
+
+% \end{frame}
+
+\end{document}

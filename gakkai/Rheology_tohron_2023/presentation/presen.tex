@@ -246,26 +246,6 @@
 					\end{center}
 			\end{columns}
 		\end{exampleblock}
-		% \vspace{-2mm}
-		% \begin{alertblock}{疲労破壊も考慮すると}
-		% 	\begin{itemize}
-		% 		\item \alert{可逆的}であることが望ましい。\textcolor{blue}{$\neq$ 犠牲結合}
-		% 		\item 変形の周期に対応できるように、\alert{回復速度}も重要。
-		% 		\item \alert{粘弾性挙動としてのヒステリシスロス$\Leftrightarrow$緩和挙動}
-		% 	\end{itemize}
-		% \end{alertblock}
-
-		\note{
-			\begin{itemize}
-				\item ゴム系材料の破壊において、
-				\item アンドリューは \alert{クラックチップの先端近傍の応力場に注目}して、
-				\item クラック進展に伴い、\alert{荷重場と除荷場が変遷し}、
-				\item その際に、\alert{ヒステリシスロスによるエネルギー散逸が存在}すれば、
-				\item \alert{クラック進展が抑制}されるという機構を提案しています。
-				\item したがって、クラック進展に伴う時間スケールでのヒステリシスロスの大小が、
-				\item 破壊耐久性に強い影響を持つということになります。
-			\end{itemize}
-		}
 \end{frame}
 
 \subsection{Theoretical Models for Rubber}
@@ -815,49 +795,49 @@
 	}
 \end{frame}
 
-% \begin{frame}
-%     \frametitle{Analysis of Entanglements in Network: Z1-code}
-%         \vspace{-2mm}
-%         \begin{columns}[onlytextwidth][c]
-%             \column{.3\linewidth}
-%                 \includegraphics[width=\textwidth]{z_cord_4Chain.png}
-% 				% \caption{Entanglements by Z-1 Code}
+\begin{frame}
+    \frametitle{Analysis of Entanglements in Network: Z1-code}
+        \vspace{-2mm}
+        \begin{columns}[onlytextwidth][c]
+            \column{.3\linewidth}
+                \includegraphics[width=\textwidth]{z_cord_4Chain.png}
+				% \caption{Entanglements by Z-1 Code}
 				
-%             \column{.6\linewidth}
-%             \begin{block}{Comparison with Homopolymer Melt}
-%                 \begin{itemize}
-%                     \item Z is number of entanglements per chain
-%                     % \item 今回のネットワークは、\\ホモポリマーと同等
-%                 \end{itemize}
-%                 \scriptsize
-%                 \begin{center}
-%                     \begin{tabular}{c||c|c} \hline
-%                         &Homo & 4 Chain NW \\ \hline \hline
-%                         Segments& 50& 48 \\ \hline
-%                         Chains & 200& 768 \\ \hline
-%                         Entanglements& 204& 800\\ \hline
-%                         Entangled Chains&134&557 \\ \hline
-%                         \alert{$<Z>_{Z1}$}&\alert{1.02}& \alert{1.04}\\ \hline
-%                     \end{tabular}
-%                 \end{center}
-%             \end{block}
-%         \end{columns}
-%     \begin{alertblock}{Z1-code?}
-%         \begin{itemize}
-%             \item Z1-code is an algorism to visualize and count entanglements\footnote{
-%                 M. Kröger, Comput. Phys. Commun. 168, 209 (2005)
-%             }
-%         \end{itemize}
-%     \end{alertblock}
-% 	\note{
-% 		\begin{itemize}
-% 			\item この弾性率増加の原因を明確にするため、絡み合いを表すZを見てみました。
-% 			\item Zは同じ長さのストランドの直鎖ポリマーとほぼ同一であり適正な初期化も確認できました。
-% 			\item \textcolor{red}{(POINT left two)}
-% 			\item 1.02 and 1.04
-% 		\end{itemize}
-% 	}
-% \end{frame}
+            \column{.6\linewidth}
+            \begin{block}{Comparison with Homopolymer Melt}
+                \begin{itemize}
+                    \item Z is number of entanglements per chain
+                    % \item 今回のネットワークは、\\ホモポリマーと同等
+                \end{itemize}
+                \scriptsize
+                \begin{center}
+                    \begin{tabular}{c||c|c} \hline
+                        &Homo & 4 Chain NW \\ \hline \hline
+                        Segments& 50& 48 \\ \hline
+                        Chains & 200& 768 \\ \hline
+                        Entanglements& 204& 800\\ \hline
+                        Entangled Chains&134&557 \\ \hline
+                        \alert{$<Z>_{Z1}$}&\alert{1.02}& \alert{1.04}\\ \hline
+                    \end{tabular}
+                \end{center}
+            \end{block}
+        \end{columns}
+    \begin{alertblock}{Z1-code?}
+        \begin{itemize}
+            \item Z1-code is an algorism to visualize and count entanglements\footnote{
+                M. Kröger, Comput. Phys. Commun. 168, 209 (2005)
+            }
+        \end{itemize}
+    \end{alertblock}
+	\note{
+		\begin{itemize}
+			\item この弾性率増加の原因を明確にするため、絡み合いを表すZを見てみました。
+			\item Zは同じ長さのストランドの直鎖ポリマーとほぼ同一であり適正な初期化も確認できました。
+			\item \textcolor{red}{(POINT left two)}
+			\item 1.02 and 1.04
+		\end{itemize}
+	}
+\end{frame}
 
 \begin{frame}
     \frametitle{Reduced Entanglements by NPT Model}
